@@ -2,8 +2,8 @@ import csv
 import re
 import nltk 
 from nltk.corpus import stopwords
-nltk.download('stopwords')
-nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 
 # python -m nltk.downloader stopwords

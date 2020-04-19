@@ -1,39 +1,66 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/main.css">
-    </head>
-    <body>
-        <div class="topcorner">
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
+
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+
+<body>
+    <div class="topcorner">
+        <p>Project Name: {{ name }}</p>
+        <p>Student Name: ({{ netid }})</p>
+    </div>
+    <form class="form-inline global-search">
+        <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
+            <span style="color: #DF0101; ">G</span>
+            <span style="color: #FF8000; ">i</span>
+            <span style="color: #FACC2E; ">f</span>
+            <span style="color: #298A08; ">t</span>
+            <span style="color: #0404B4; ">e</span>
+            <span style="color: #29088A; ">r</span>
+            <span style="color: #7401DF; ">.</span>
+            <span style="color: #7401DF; ">a</span>
+            <span style="color: #B40486; ">i</span>
+        </h1>
+
+        <br><br>
+
+        <div class="form-group">
+            <input id="input" type="text" name="search" class="form-control" placeholder="Enter recipient's interests">
         </div>
-        <form class="form-inline global-search">
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
-                <span style="color: #EA4335; ">S</span>
-                <span style="color: #FBBC05; ">4</span>
-                3
-                <span style="color: #34A853; ">0</span>
-                <span style="color: #EA4335; ">0</span>
-            </h1>
-            
-            <br><br>
-            
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
-            </div>
-            <button type="submit" class="btn btn-info"> Go! </button>
-        </form>
-        <form class="form-inline global-search">
+        <button type="submit" class="btn btn-info"> Go! </button>
+        <br />
+        <br />
+        Budget:
+        <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" name="price">
+            <p>$<span id="demo"></span></p>
+        </div>
+    </form>
+
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = this.value;
+        }
+    </script>
+
+    <form class="form-inline global-search">
         {% if data %}
-            <h1>{{output_message}}</h1>
-            {% for d in data %}  
-                <br>
-                <p>{{d}}</p>
-            {% endfor %}
+        <h1>{{output_message}}</h1>
+        {% for d in data %}
+        <br>
+        <p>{{d}}</p>
+        {% endfor %}
         {% endif %}
-        </form>
-    </body>
+    </form>
+
+
+
+
+</body>
 
 </html>
