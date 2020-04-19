@@ -68,16 +68,11 @@ def create_product_list(asin_list, price):
 def create_review_list(csv_name):
     result = dict()
     i = 0
-    with open(csv_name) as csvfile:
-        reviewsCSV = csv.reader(csvfile, delimiter=',')
-        for row in reviewsCSV:
-            if i == 0:
-                i += 1
-                continue
-            review_text = row[2] + " " + row[3]
-            tokenized = tokenize(review_text)
-            if (row[4] == "False"):
-                continue
+    reviews_df = pd.read_csv(csv_name)
+    reviews_df['summary_and_review'] = reviews_df['reviewText'] + reviews_df['summary']
+    for index, row in reviews_df.iterrows():
+        if(bool(row['verified'])):
+            tokenized = tokenize(row['summary_and_review'])
             if (row[0] in result):
                 result[row[0]] = result[row[0]] + tokenized
             else:
