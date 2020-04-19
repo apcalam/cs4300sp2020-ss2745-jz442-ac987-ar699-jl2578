@@ -34,13 +34,15 @@ def search():
     print(boolean_search(reviews_dct, query))
 
     query = request.args.get('search')
-    price = float(request.args.get('price'))
+    price = request.args.get('price')
+    if not price:
+        price = 50
     if not query:
         data = []
         output_message = ''
     else:
         output_message = "Relevant products"
-        data = create_product_list(boolean_search(reviews_dct, query), price)
+        data = create_product_list(boolean_search(reviews_dct, query), float(price))
     return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 def tokenize(text): 
