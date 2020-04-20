@@ -16,8 +16,8 @@ import os.path as path
 
 # python -m nltk.downloader stopwords
 
-project_name = "Gifter.ai"
-net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
+# project_name = "Gifter.ai"
+# net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
 
 @irsystem.route('/', methods=['GET'])
