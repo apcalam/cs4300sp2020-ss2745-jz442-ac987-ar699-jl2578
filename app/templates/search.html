@@ -80,7 +80,7 @@
         <h1>{{output_message}}</h1>
         {% for d in data %}
         <br>
-        <p>{{d}}</p>
+        <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
         {% endfor %}
         {% endif %}
     </form>

@@ -40,10 +40,12 @@ def search():
     if not query:
         data = []
         output_message = ''
+        asin_list = []
     else:
         output_message = "Relevant products"
-        data = create_product_list(boolean_search(reviews_dct, query), float(price))
-    return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+        asin_list = boolean_search(reviews_dct, query)
+        data = create_product_list(asin_list, float(price))
+    return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
 
 def tokenize(text): 
     s = set(stopwords.words('english'))
