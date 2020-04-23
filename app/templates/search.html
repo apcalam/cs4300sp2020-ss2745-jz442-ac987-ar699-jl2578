@@ -2,55 +2,63 @@
 
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/main.css">
+    <!-- <link rel="stylesheet" href="/static/Skeleton-2.0.4/css/skeleton.css"> -->
+    <link rel="stylesheet" href="../static/main.css">
+    <link rel="stylesheet" href="../static/styling.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 </head>
 
 <body>
     <div class="topcorner">
-        <p>Project Name: {{ name }}</p>
-        <p>Student Name: ({{ netid }})</p>
+        <p class="name">Project Name: {{ name }}</p>
+        <p>Student Names: {{ netid }}</p>
     </div>
     <form class="form-inline global-search">
-        <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-            <span style="color: #DF0101; ">G</span>
-            <span style="color: #FF8000; ">i</span>
-            <span style="color: #FACC2E; ">f</span>
-            <span style="color: #298A08; ">t</span>
-            <span style="color: #0404B4; ">e</span>
-            <span style="color: #29088A; ">r</span>
-            <span style="color: #7401DF; ">.</span>
-            <span style="color: #7401DF; ">a</span>
-            <span style="color: #B40486; ">i</span>
+        <h1 class="header">
+            Gifter.ai
         </h1>
 
         <br><br>
 
+        <h5> Let's help you find the perfect gift for someone! </h5>
+
 
         <br />
         <br />
-        What's the occasion?
+        <br />
+        <br />
+        <h5> What's the occasion? </h5>
+        <br>
+        <br>
+
         <div class="occasion">
-            <br />
-            <button type="button" class="btn btn-info"> birthday 🎈 </button>
-            <button type="button" class="btn btn-info"> wedding 👰 </button>
-            <button type="button" class="btn btn-info"> holiday 🎉</button>
-            <button type="button" class="btn btn-info"> misc 🤷 </button>
+            <!-- <a href="#" class="fake-button">birthday 🎈</a> -->
+            <button type="button" class="default-mode">birthday 🎈 </button>
+            <button type="button" class="default-mode"> wedding 👰 </button>
+            <button type="button" class="default-mode"> holiday 🎉</button>
+            <button type="button" class="default-mode"> misc 🤷 </button>
         </div>
+        </br>
 
         <br />
         <br />
-        How old is the recipient?
+        <h5>How old is the recipient?</h5>
+        <br>
+
         <div class="age">
             <br />
-            <button type="button" class="btn btn-info"> babies 👶 </button>
-            <button type="button" class="btn btn-info"> children 🧒</button>
-            <button type="button" class="btn btn-info"> teens 🧑</button>
-            <button type="button" class="btn btn-info"> adults 🤦</button>
+            <button type="button" class="default-mode"> babies 👶 </button>
+            <button type="button" class="default-mode"> children 🧒</button>
+            <button type="button" class="default-mode"> teens 🧑</button>
+            <button type="button" class="default-mode"> adults 🤦</button>
         </div>
+        </br>
 
         <br />
         <br />
-        What is your budget?
+        <h5>What is your budget?</h5>
+        <br>
         <div class="slidecontainer">
             <br />
             <input type="range" min="1" max="100" value="50" class="slider" id="myRange" name="price">
@@ -59,21 +67,28 @@
 
         <br />
         <br />
-        The person I'm gifting enjoys...
+        <br>
+        <h5>The person I'm gifting enjoys...</h5>
+        <br>
+        <br>
+        <div id="loadingGif" style="display:none"><img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">
+        </div>
+
         <div class="form-group">
             <input id="input" type="text" name="search" class="form-control"
                 placeholder="i.e. camping, music or leave it blank">
         </div>
-        <button type="submit" class="btn btn-info"> Surprise Me! </button>
+        <br>
+        <br>
+        <button type="submit" class="default-mode"> surprise me!
+            🤩</button>
+
         <br />
         <br />
-
-
-
-
 
 
     </form>
+
 
     <script>
         var slider = document.getElementById("myRange");
@@ -83,12 +98,35 @@
         slider.oninput = function () {
             output.innerHTML = this.value;
         }
+
+
+
+
+        $("button[type=submit]").click(function () {
+            document.getElementById('loadingGif').style.display = "block";
+            setTimeout(function () {
+                document.getElementById('loadingGif').style.display = "none";
+            }, 5000);
+
+        });
+
+        jQuery("button[type=button]").click(function () {
+            jQuery(this).toggleClass('active');
+            jQuery(this).toggleClass('button-clicked');
+        });
+
     </script>
+
+
+
+
+
 
     <form class="form-inline global-search">
         {% if data %}
         <h1>{{output_message}}</h1>
-        {% for d in data %}
+        <br>
+        <div class="results">{% for d in data %}</div>
         <br>
         <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
         {% endfor %}

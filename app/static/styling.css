@@ -1,0 +1,60 @@
+body {
+  background-image: linear-gradient(to bottom, rgb(252, 247, 221), white);
+}
+  
+  .step-links a{
+  color: #4285F4;
+  }
+  
+  .header {
+    color: gray;
+    size: 300px;
+  }
+
+  .occasion {
+    width: 50%;
+  }
+
+  .age {
+    width: 50%;
+  }
+
+  button {
+    color:white;
+    padding: 2%;
+    border-radius: 5%;
+    border: none;
+    margin: 2%;
+    width: 15%;
+  }
+
+  .default-mode{
+    color:white;
+    background-color: #FF836C;
+  }
+
+  button:hover {
+    color:white;
+  }
+  
+  button:active{
+    background-color: #C55C4C;
+  }
+
+  .button-clicked {
+    background-color: #C55C4C;
+  }
+
+  
+
+
+
+
+/* 
+  
+  button:active{
+    background-color: blue;
+  } */
+  
+
+                                                                                                                          
