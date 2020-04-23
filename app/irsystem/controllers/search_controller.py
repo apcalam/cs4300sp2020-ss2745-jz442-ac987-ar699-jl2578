@@ -12,27 +12,26 @@ nltk.download('stopwords')
 nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 import os.path as path
-
-
-# python -m nltk.downloader stopwords
+from nltk.stem import PorterStemmer 
+import pickle
 
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
+# Load inverted indices
+cur_path = pathlib.Path(__file__).parent.absolute().parent.absolute().parent.absolute()
+path_review_index =  path.abspath(path.join(cur_path,"datafiles/review_index.pickle"))
+path_title_index =  path.abspath(path.join(cur_path,"datafiles/title_index.pickle"))
+
+with open(path_review_index, 'rb') as handle:
+    review_index = pickle.load(handle)
+
+with open(path_title_index, 'rb') as handle:
+    title_index = pickle.load(handle)
 
 @irsystem.route('/', methods=['GET'])
 def search():
     
-
-    cur_path = pathlib.Path(__file__).parent.absolute().parent.absolute().parent.absolute()
-
-    #print(cur_path)
-    path_1 =  path.abspath(path.join(cur_path,"datafiles/reviews-m03.csv"))
-    print(path_1)
-    reviews_dct = create_review_list(path_1)
-    query = "cutterpede mom dinosaur moist damp lmao lamp pole"
-    print(boolean_search(reviews_dct, query))
-
     query = request.args.get('search')
     price = request.args.get('price')
     if not price:
@@ -43,20 +42,20 @@ def search():
         asin_list = []
     else:
         output_message = "Relevant products"
-        asin_list = boolean_search(reviews_dct, query)
+        asin_list = boolean_search(query)
         data = create_product_list(asin_list, float(price))
     return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
 
-def tokenize(text): 
+def tokenize_query(text): 
     s = set(stopwords.words('english'))
+    ps = PorterStemmer()
     words = re.findall("[a-zA-Z]+", text)
-    lower = map(lambda x: x.lower(), words)
-    filtered = [w for w in lower if not w in s] 
+    filtered = [ps.stem(w).lower() for w in words if not w in s]
     return filtered
 
 def create_product_list(asin_list, price):
     cur_path = pathlib.Path(__file__).parent.absolute().parent.absolute().parent.absolute()
-    path1 =  path.abspath(path.join(cur_path,"datafiles/metadata-m03.csv"))
+    path1 =  path.abspath(path.join(cur_path,"datafiles/merged-metadata-final.csv"))
     metadata_df = pd.read_csv(path1)
     product_list = []
     for asin in asin_list:
@@ -67,68 +66,15 @@ def create_product_list(asin_list, price):
             product_list.append(title + "   --   " + str(out_price))
     return product_list
 
-def create_review_list(csv_name):
-    result = dict()
-    i = 0
-    reviews_df = pd.read_csv(csv_name)
-    reviews_df['summary_and_review'] = reviews_df['reviewText'] + reviews_df['summary']
-    for index, row in reviews_df.iterrows():
-        if(bool(row['verified'])):
-            tokenized = tokenize(row['summary_and_review'])
-            if (row[0] in result):
-                result[row[0]] = result[row[0]] + tokenized
-            else:
-                result[row[0]] = tokenized
-    return result
-
-#TODO N'T doesn't work
-def get_word_count(input_rev_dct):
-    result = dict()
-    for product in input_rev_dct:
-        words = input_rev_dct[product]
-        visited = list()
-    for word in words:
-        if word in visited:
-            continue
-        visited.append(word)
-        if (word in result):
-            result[word] += 1
-        else:
-            result[word] = 1
-    return result  
-
-#TODO N'T doesn't work
-def find_good_types(input_rev_dct): 
-    word_count = get_word_count(input_rev_dct)
-    result = list()
-    for word in word_count:
-        value = word_count[word]
-        if (word_count[word]) > 1:
-            result.append(word)
-    result.sort()
-    return result
-
-#TODO N'T doesn't work
-def filter_good_types(reviews_dct, good_types):
-    for product in reviews_dct:
-        review = reviews_dct[product]
-        good = [w for w in review if w in good_types] 
-        reviews_dct[product] = good
-    return reviews_dct
-
-
-# good_types = find_good_types(reviews_dct) 
-# reviews_dct = filter_good_types(reviews_dct, good_types)
-
 #TODO use root of word
-def boolean_search(reviews_dct, query):
-    query_tok = tokenize(query)
+def boolean_search(query):
+    query_tok = tokenize_query(query)
     result = list()
-    for product in reviews_dct:
-        review = reviews_dct[product]
-        review_s = set(review)
-        query_s = set(query_tok)
-        words = review_s.intersection(query_s)
-        if (len(words) > 0):
-            result.append(product)
-    return result[:4]
+    for token in query_tok:
+        token_list = []
+        review_asins = list(set([token_list.append(asin) for (_,asin,_) in review_index[token]]))
+        title_asins = list(set(title_index[token]))
+        review_asins = list(set(review_asins).difference(set(title_asins)))
+        result += title_asins
+        result += review_asins
+    return result[:5]
