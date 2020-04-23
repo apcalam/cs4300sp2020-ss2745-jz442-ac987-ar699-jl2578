@@ -13,25 +13,22 @@ nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 import os.path as path
 
-
-# python -m nltk.downloader stopwords
-
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
+# Load inverted indices
+with open('review_index.pickle', 'rb') as handle:
+    review_index = pickle.load(handle)
+
+with open('title_index.pickle', 'rb') as handle:
+    title_index = pickle.load(handle)
 
 @irsystem.route('/', methods=['GET'])
 def search():
-    
-
     cur_path = pathlib.Path(__file__).parent.absolute().parent.absolute().parent.absolute()
-
-    #print(cur_path)
+    
     path_1 =  path.abspath(path.join(cur_path,"datafiles/reviews-m03.csv"))
-    print(path_1)
     reviews_dct = create_review_list(path_1)
-    query = "cutterpede mom dinosaur moist damp lmao lamp pole"
-    print(boolean_search(reviews_dct, query))
 
     query = request.args.get('search')
     price = request.args.get('price')
