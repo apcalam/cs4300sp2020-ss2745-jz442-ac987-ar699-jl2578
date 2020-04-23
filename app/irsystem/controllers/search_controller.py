@@ -30,8 +30,7 @@ with open(path_title_index, 'rb') as handle:
     title_index = pickle.load(handle)
 
 @irsystem.route('/', methods=['GET'])
-def search():
-    
+def search():    
     query = request.args.get('search')
     price = request.args.get('price')
     if not price:
@@ -60,10 +59,11 @@ def create_product_list(asin_list, price):
     product_list = []
     for asin in asin_list:
         row = metadata_df.loc[metadata_df.asin == asin]
-        title = str(row['title'].iloc[0])
-        out_price = '$' + str(row['price'].iloc[0])
-        if (float(row['price'].iloc[0]) <= price):
-            product_list.append(title + "   --   " + str(out_price))
+        if(not row.empty):
+            title = str(row['title'].iloc[0])
+            out_price = '$' + str(row['price'].iloc[0])
+            if (float(row['price'].iloc[0]) <= price):
+                product_list.append(title + "   --   " + str(out_price))
     return product_list
 
 #TODO use root of word
@@ -75,6 +75,8 @@ def boolean_search(query):
         review_asins = list(set([token_list.append(asin) for (_,asin,_) in review_index[token]]))
         title_asins = list(set(title_index[token]))
         review_asins = list(set(review_asins).difference(set(title_asins)))
+        print(review_asins)
+        print(title_asins)
         result += title_asins
         result += review_asins
     return result[:5]
