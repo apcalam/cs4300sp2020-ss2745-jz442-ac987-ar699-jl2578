@@ -72,11 +72,15 @@ def boolean_search(query):
     result = list()
     for token in query_tok:
         token_list = []
-        review_asins = list(set([token_list.append(asin) for (_,asin,_) in review_index[token]]))
-        title_asins = list(set(title_index[token]))
+        if(token in review_index):
+            review_asins = list(set([token_list.append(asin) for (_,asin,_) in review_index[token]]))
+        else:
+            review_asins = []
+        if(token in title_index):
+            title_asins = list(set(title_index[token]))
+        else:
+            title_asins = []
         review_asins = list(set(review_asins).difference(set(title_asins)))
-        print(review_asins)
-        print(title_asins)
         result += title_asins
         result += review_asins
     return result[:5]
