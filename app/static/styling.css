@@ -6,19 +6,26 @@ body {
   color: #4285F4;
   }
   
+
+   /* ==================== header stuff ==================*/
   .header {
-    color: gray;
-    size: 300px;
+    color: rgb(102, 102, 102);
+    font-weight: bold;
+    font-size: 100px;
   }
 
-  .occasion {
-    width: 50%;
+  .subtitle {
+    color: rgb(105, 105, 105);
+    font-size: 125%;
   }
 
-  .age {
-    width: 50%;
+  /* ==================== question stuff ==================*/
+  .question {
+    text-align: right;
+    font-size: 160%;
   }
 
+    /* ==================== button stuff ==================*/
   button {
     color:white;
     padding: 2%;
@@ -28,33 +35,71 @@ body {
     width: 15%;
   }
 
-  .default-mode{
-    color:white;
-    background-color: #FF836C;
+
+  .emoji{
+    font-size: 170%;
+    display: block;
   }
 
-  button:hover {
+  .opt-btn {
+    font-size: 125%;
+  }
+
+  .default-mode{
     color:white;
+    background-color: rgb(236, 144, 128);
+  }
+    /* OG: #FF836C */
+
+/* Ripple effect */
+  .ripple {
+    background-position: center;
+    transition: background 0.3s;
+  }
+  .ripple:hover {
+    background: rgb(236, 61, 34) radial-gradient(circle, transparent 50%, rgb(236, 61, 34) 1%) center/300%;
+  }
+  .ripple:active {
+    background-color: rgb(207, 47, 23);
+    background-size: 100%;
+    transition: background .2s;
   }
   
-  button:active{
-    background-color: #C55C4C;
+  .default-mode:hover{
+    color:white;
+    background-color: rgb(236, 61, 34);
+  }
+  
+  .default-mode:active{
+    background-color: rgb(236, 61, 34);
   }
 
   .button-clicked {
-    background-color: #C55C4C;
+    background-color:  rgb(236, 61, 34);
+  } 
+
+ .submit-btn {
+   font-size: 150%;
+   width: 40%;
+ }
+  
+  .occasion {
+    width: 50%;
   }
 
-  
+  .age {
+    width: 50%;
+  }
 
+ /* ==================== slider stuff ==================*/
 
+ input[type=range] {
+   width: 500px;
+ }
 
-
-/* 
-  
-  button:active{
-    background-color: blue;
-  } */
-  
-
-                                                                                                                          
+ #slider {
+   display: block;
+   text-align: center;
+   margin: 0 auto;
+   width: 500px;
+ }
