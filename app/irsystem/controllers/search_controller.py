@@ -48,7 +48,7 @@ def search():
         output_message = ''
         asin_list = []
     else:
-        output_message = "Relevant products"
+        output_message = "Based on your inputs, here are some gift ideas!"
         asin_list = boolean_search(query)
         data = create_product_list(asin_list, float(price))
     return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)

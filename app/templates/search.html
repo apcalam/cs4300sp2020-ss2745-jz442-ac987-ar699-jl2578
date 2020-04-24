@@ -8,7 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -17,20 +17,19 @@
         <p>Student Names: {{ netid }}</p>
     </div> -->
     <form class="form-inline global-search">
-        <h1 class="header">
-            Gifter.ai
+        <h1 class=" header">
+            gifter.ai🎁
         </h1>
 
         <br><br>
 
-        <h4 class="subtitle"> Let's help you find the perfect gift for someone! </h4>
+        <h4 class="subtitle"> let's help you find the perfect gift for someone! </h4>
 
-
         <br />
         <br />
         <br />
         <br />
-        <h5 class="question"> What's the occasion? </h5>
+        <h5 class="question"> what's the occasion? </h5>
         <br>
         <br>
 
@@ -44,7 +43,7 @@
 
         <br />
         <br />
-        <h5 class="question">How old is the recipient?</h5>
+        <h5 class="question">how old is the recipient?</h5>
         <br>
 
         <div class="age">
@@ -58,11 +57,12 @@
 
         <br />
         <br />
-        <h5 class="question">What is your budget?</h5>
+        <h5 class="question">what is your budget?</h5>
         <br>
         <div>
             <br />
             <input type="range" min="1" max="100" value="50" class="slider" id="myRange" name="price">
+
             <p>$<span id="demo"></span></p>
         </div>
         <br>
@@ -76,7 +76,7 @@
         <br />
         <br />
         <br>
-        <h5 class="question">The person I'm gifting enjoys...</h5>
+        <h5 class="question">the person I'm gifting enjoys...</h5>
         <br>
         <br>
         <div id="loadingGif" style="display:none"><img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">
@@ -144,8 +144,8 @@
 
     </script>
 
-
-
+    <br>
+    <br>
 
 
 
@@ -153,9 +153,12 @@
         {% if data %}
         <h1>{{output_message}}</h1>
         <br>
-        <div class="results">{% for d in data %}</div>
+        <br>
+        <div id="results">{% for d in data %}</div>
         <br>
         <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
+
+
         {% endfor %}
         {% endif %}
     </form>

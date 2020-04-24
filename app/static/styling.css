@@ -1,5 +1,6 @@
 body {
   background-image: linear-gradient(to bottom, rgb(252, 247, 221), white);
+
 }
   
   .step-links a{
@@ -11,7 +12,9 @@ body {
   .header {
     color: rgb(102, 102, 102);
     font-weight: bold;
-    font-size: 100px;
+    font-size: 75px;
+    font-family: 'Raleway', sans-serif;
+
   }
 
   .subtitle {
@@ -102,4 +105,10 @@ body {
    text-align: center;
    margin: 0 auto;
    width: 500px;
+ }
+
+ /* ==================== results ==================*/
+ .results {
+   font-size: 30px;
+   text-align: left;
  }
