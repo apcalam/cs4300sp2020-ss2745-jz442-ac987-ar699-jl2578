@@ -108,7 +108,8 @@ body {
  }
 
  /* ==================== results ==================*/
- .results {
-   font-size: 30px;
-   text-align: left;
- }
+
+
+.make-bold {
+  font-weight: bold;
+}

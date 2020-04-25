@@ -34,10 +34,14 @@
         <br>
 
         <div class="occasion">
-            <button type="button" class="ripple opt-btn default-mode">birthday <span class="emoji">🎈</span> </button>
-            <button type="button" class="ripple opt-btn default-mode"> wedding <span class="emoji">👰</span> </button>
-            <button type="button" class="ripple opt-btn default-mode"> holiday <span class="emoji">🎉</span></button>
-            <button type="button" class="ripple opt-btn default-mode"> misc. <span class="emoji">🤷</span></button>
+            <button type="button" name="occasion" value="birthday" class="ripple opt-btn default-mode">birthday <span
+                    class="emoji">🎈</span> </button>
+            <button type="button" name="occasion" value="wedding" class="ripple opt-btn default-mode"> wedding <span
+                    class="emoji">👰</span> </button>
+            <button type="button" name="occasion" value="holidays" class="ripple opt-btn default-mode"> holidays <span
+                    class="emoji">❄️</span></button>
+            <button type="button" name="occasion" value="other" class="ripple opt-btn default-mode"> ¯\_(ツ)_/¯
+                <span class="emoji">🤷</span></button>
         </div>
         </br>
 
@@ -48,10 +52,14 @@
 
         <div class="age">
             <br />
-            <button type="button" class="ripple opt-btn default-mode"> babies <span class="emoji">👶</span></button>
-            <button type="button" class="ripple opt-btn default-mode"> children <span class="emoji">🧒</span></button>
-            <button type="button" class="ripple opt-btn default-mode"> teens <span class="emoji">🧑</span></button>
-            <button type="button" class="ripple opt-btn default-mode"> adults <span class="emoji">🤦</span></button>
+            <button type="button" name="age" value="babies" class="ripple opt-btn default-mode"> babies <span
+                    class="emoji">👶</span></button>
+            <button type="button" name="age" value="children" class="ripple opt-btn default-mode"> children <span
+                    class="emoji">🧒</span></button>
+            <button type="button" name="age" value="teens" class="ripple opt-btn default-mode"> teens <span
+                    class="emoji">🧑</span></button>
+            <button type="button" name="age" value="adults" class="ripple opt-btn default-mode"> adults <span
+                    class="emoji">🤦</span></button>
         </div>
         </br>
 
@@ -156,7 +164,21 @@
         <br>
         <div id="results">{% for d in data %}</div>
         <br>
-        <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
+        <div class="result-box">
+            <!--title-->
+            <p>{{d[1]}}</p>
+            <!--image-->
+            <!-- <p>{{d[6]}}</p> -->
+
+            <!--  -->
+            <!-- p><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> review 1 -->
+            <!-- <p><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> review 1 -->
+            <!-- <p><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p> review 2 -->
+            <!--  -->
+            <!-- </div> -->
+            <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
+        </div>
+
 
 
         {% endfor %}
