@@ -18,6 +18,15 @@ nltk.download('punkt')
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
+
+def tokenize_query(text):
+    s = set(stopwords.words('english'))
+    ps = PorterStemmer()
+    words = re.findall("[a-zA-Z]+", text)
+    filtered = [ps.stem(w).lower() for w in words if not w in s]
+    return filtered
+
+
 TITLE_WEIGHT = 5
 REVIEW_WEIGHT = 1
 NUM_RESULTS = 10
@@ -55,24 +64,12 @@ def search():
     if not price:
         price = 50
     if not query:
-        query = "gift"
-        data = []
-        output_message = ''
-        asin_list = []
-    else:
-        output_message = "Based on your inputs, here are some gift ideas!"
-        asin_list = boolean_search(query)
-        data = create_product_list(asin_list, float(price))
-        # productid, title, review_summary1, review_summary2, review1, review2, image, price
+        query = "gift present"
+    output_message = "Based on your inputs, here are some gift ideas!"
+    asin_list = boolean_search(query)
+    data = create_product_list(asin_list, float(price))
+    # productid, title, review_summary1, review_summary2, review1, review2, image, price
     return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
-
-
-def tokenize_query(text):
-    s = set(stopwords.words('english'))
-    ps = PorterStemmer()
-    words = re.findall("[a-zA-Z]+", text)
-    filtered = [ps.stem(w).lower() for w in words if not w in s]
-    return filtered
 
 
 def create_product_list(asin_list, price):
