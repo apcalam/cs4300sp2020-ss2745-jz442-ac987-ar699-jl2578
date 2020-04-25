@@ -18,9 +18,10 @@ nltk.download('punkt')
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
-TITLE_WEIGHT = 30
+TITLE_WEIGHT = 5
 REVIEW_WEIGHT = 1
 NUM_RESULTS = 10
+GIFT_WORDS = tokenize_query("gift present")
 
 # Load inverted indices
 cur_path = pathlib.Path(__file__).parent.absolute(
@@ -36,6 +37,16 @@ with open(path_review_index, 'rb') as handle:
 with open(path_title_index, 'rb') as handle:
     title_index = pickle.load(handle)
 
+# Load reviews df and metadata df
+cur_path = pathlib.Path(__file__).parent.absolute(
+).parent.absolute().parent.absolute()
+path1 = path.abspath(
+    path.join(cur_path, "datafiles/merged-metadata-final.csv"))
+metadata_df = pd.read_csv(path1)
+path2 = path.abspath(
+    path.join(cur_path, "datafiles/merged-reviews-final.csv"))
+reviews_df = pd.read_csv(path2)
+
 
 @irsystem.route('/', methods=['GET'])
 def search():
@@ -44,6 +55,7 @@ def search():
     if not price:
         price = 50
     if not query:
+        query = "gift"
         data = []
         output_message = ''
         asin_list = []
@@ -51,6 +63,7 @@ def search():
         output_message = "Based on your inputs, here are some gift ideas!"
         asin_list = boolean_search(query)
         data = create_product_list(asin_list, float(price))
+        # productid, title, review_summary1, review_summary2, review1, review2, image, price
     return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
 
 
@@ -63,19 +76,24 @@ def tokenize_query(text):
 
 
 def create_product_list(asin_list, price):
-    cur_path = pathlib.Path(__file__).parent.absolute(
-    ).parent.absolute().parent.absolute()
-    path1 = path.abspath(
-        path.join(cur_path, "datafiles/merged-metadata-final.csv"))
-    metadata_df = pd.read_csv(path1)
     product_list = []
     for asin in asin_list:
         row = metadata_df.loc[metadata_df.asin == asin]
+        reviews = reviews_df.loc[reviews_df.asin == asin]
         if(not row.empty):
             title = str(row['title'].iloc[0])
+            review1 = str(reviews['reviewText'].iloc[0])
+            review2 = str(reviews['reviewText'].iloc[1])
+            summary1 = str(reviews['summary'].iloc[0])
+            summary2 = str(reviews['summary'].iloc[1])
+            image = str(row['image'].iloc[0])
             out_price = '$' + str(row['price'].iloc[0])
+
             if (float(row['price'].iloc[0]) <= price):
-                product_list.append(title + "   --   " + str(out_price))
+                product_tuple = (asin, title, summary1,
+                                 summary2, review1, review2, image, out_price)
+                product_list.append(product_tuple)
+    # list of tuples
     return product_list
 
 
