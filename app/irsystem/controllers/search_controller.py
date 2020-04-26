@@ -136,14 +136,27 @@ def create_product_list(asin_list, price, review_score_dict):
                 review_score_sorted = {k: v for k, v in sorted(
                     review_scores.items(), key=lambda item: item[1], reverse=True)}
                 reviewerIDs = list(review_score_sorted.keys())[:2]
-                review1 = str(
-                    reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['reviewText'])
-                review2 = str(
-                    reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['reviewText'])
-                summary1 = str(
-                    reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['summary'])
-                summary2 = str(
-                    reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['summary'])
+                if(len(reviewerIDs) >= 2):
+                    review1 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['reviewText'])
+                    review2 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['reviewText'])
+                    summary1 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['summary'])
+                    summary2 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['summary'])
+                if(len(reviewerIDs) == 1):
+                    review1 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['reviewText'])
+                    summary1 = str(
+                        reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['summary'])
+                    review2 = ""
+                    summary2 = ""
+                else:
+                    review1 = str(reviews['reviewText'].iloc[0])
+                    review2 = str(reviews['reviewText'].iloc[1])
+                    summary1 = str(reviews['summary'].iloc[0])
+                    summary2 = str(reviews['summary'].iloc[1])
             else:
                 review1 = str(reviews['reviewText'].iloc[0])
                 review2 = str(reviews['reviewText'].iloc[1])
