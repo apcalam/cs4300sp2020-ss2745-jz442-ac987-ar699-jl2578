@@ -91,7 +91,8 @@
 
 
         <div id="presentOpenGif" style="display:none"><img
-                src="https://i.pinimg.com/originals/fd/2c/1a/fd2c1a96b654e220d09525f006482477.gif" alt="present">
+                src="https://cdn.clipart.email/67ae0013b5db01b6654ce772a2ad9d9c_gifts-clipart-animated-gif-gifts-animated-gif-transparent-free-_800-800.gif"
+                alt="present" class="animated-gif">
         </div>
         <br>
 
@@ -138,26 +139,23 @@
             //     var elmnt = document.getElementById("results-begin");
             //     elmnt.scrollIntoView();
             // });
-            // $(document).ready(function () {
-            //     // Handler for .ready() called.
-            //     $('html, body').animate({
-            //         scrollTop: $('#results-begin').offset().top
-            //     }, 'slow');
-            // });
 
         });
 
-        $("#question").submit(function (e) {
-            e.preventDefault();
-            setTimeout(function () {
-                $(document).ready(function () {
-                    // Handler for .ready() called.
-                    $('html, body').animate({
-                        scrollTop: $('#results-begin').offset().top
-                    }, 'slow');
-                })
-            }, 2000);
-        });
+        $(document).ready(function () {
+            $("button[type=submit]").click(function (e) {
+                document.cookie = 1;
+                reload = true;
+                location.reload();
+
+            })
+            if (document.cookie == 1) {
+                document.cookie = "0";
+                $('html, body').animate({
+                    scrollTop: $("#results-begin").offset().top
+                }, 1000);
+            }
+        })
 
         jQuery("button[type=button]").click(function () {
             jQuery(this).toggleClass('active');

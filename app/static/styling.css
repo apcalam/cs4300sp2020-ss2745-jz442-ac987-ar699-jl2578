@@ -30,6 +30,12 @@ body {
     font-size: 160%;
   }
 
+    /* ==================== gif stuff ==================*/
+    img.animated-gif {
+      width: 300px;
+  height: auto;
+    }
+
     /* ==================== button stuff ==================*/
   button {
     color:white;
@@ -139,14 +145,6 @@ body {
   margin-bottom: 2%;
 }
 
-.link-box {
-
-}
-
-.data-box {
-
-}
-
 .product-img {
   width: 200px;
 }
@@ -166,3 +164,4 @@ body {
 .review-text {
   margin-bottom: 4%;
 }
+
