@@ -159,6 +159,8 @@
 
         jQuery("button[type=button]").click(function () {
             jQuery(this).toggleClass('active');
+            $(this).siblings().removeClass('active')
+            $(this).siblings().removeClass('button-clicked')
             jQuery(this).toggleClass('button-clicked');
 
             var fired_button = $(this).val();
