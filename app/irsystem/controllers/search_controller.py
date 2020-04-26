@@ -27,10 +27,17 @@ def tokenize_query(text):
     return filtered
 
 
+OCCASION_WEIGHT = 1.2
+AGE_WEIGHT = 1.2
 TITLE_WEIGHT = 5
 REVIEW_WEIGHT = 1
 NUM_RESULTS = 10
 GIFT_WORDS = tokenize_query("gift present")
+BIRTHDAY_WORDS = tokenize_query("birthday")
+ROMANCE_WORDS = tokenize_query(
+    "anniversary wedding marriage newlywed registry romantic romance valentines date relationship")
+HOLIDAYS_WORDS = tokenize_query(
+    "holidays christmas chanukah hanukkah, holidays, merry xmas, santa kwanzaa noel")
 
 # Load inverted indices
 cur_path = pathlib.Path(__file__).parent.absolute(
@@ -61,6 +68,7 @@ reviews_df = pd.read_csv(path2)
 def search():
     query = request.args.get('search')
     price = request.args.get('price')
+    # ocasion = request.get('')
     if not price:
         price = 50
     if not query:
@@ -150,6 +158,21 @@ def boolean_search(query):
             product_score[asin] += total_review_score
         else:
             product_score[asin] = total_review_score
+
+    # Multiply the scores if the gift words appear in the title/review
+    for birthday_word in BIRTHDAY_WORDS:
+        visited = set()
+        for (reviewerID, asin, count) in review_index[birthday_word]:
+            if asin in review_score.keys():
+                if reviewerID in review_score[asin]:
+                    review_score[asin][reviewerID] *= OCCASION_WEIGHT
+                if not asin in visited:
+                    product_score[asin] *= OCCASION_WEIGHT
+                    visited.add(asin)
+        title_asins = list(set(title_index[birthday_word]))
+        for asin in title_asins:
+            if asin in title_score.keys() and not asin in visited:
+                product_score[asin] *= OCCASION_WEIGHT
 
     product_score_sorted = {k: v for k, v in sorted(
         product_score.items(), key=lambda item: item[1], reverse=True)}
