@@ -87,7 +87,8 @@
         <h5 class="question">the person I'm gifting enjoys...</h5>
         <br>
         <br>
-        <div id="loadingGif" style="display:none"><img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">
+
+        <div id="giftGif" style="display:none"><img src="presentopen.gif">
         </div>
 
         <div class="form-group">
@@ -116,13 +117,15 @@
         }
 
 
-
-
         $("button[type=submit]").click(function () {
-            document.getElementById('loadingGif').style.display = "block";
+            document.getElementById('giftGif').style.display = "block";
             setTimeout(function () {
-                document.getElementById('loadingGif').style.display = "none";
+                document.getElementById('giftGif').style.display = "none";
             }, 5000);
+            $(document).ready(function () {
+                var elmnt = document.getElementById("results-begin");
+                elmnt.scrollIntoView();
+            });
 
         });
 
@@ -159,30 +162,46 @@
 
     <form class="form-inline global-search">
         {% if data %}
-        <h1>{{output_message}}</h1>
+        <h1 id="results-begin">{{output_message}}</h1>
         <br>
         <br>
         <div id="results">{% for d in data %}</div>
         <br>
-        <div class="result-box">
-            <!--title-->
-            <p>{{d[1]}}</p>
-            <!--image-->
-            <!-- <p>{{d[6]}}</p> -->
+        <div class="container result-box">
+            <div class="row">
+                <div class="col-sm-6 info-box">
+                    <!--title-->
+                    <p class="product-title">{{d[1]}}</p>
 
-            <!--  -->
-            <!-- p><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> review 1 -->
-            <!-- <p><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> review 1 -->
-            <!-- <p><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p> review 2 -->
-            <!--  -->
-            <!-- </div> -->
-            <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">{{d}}</a>
-        </div>
+                    <!-- price -->
+                    <p class="product-price">{{d[7]}}</p>
+
+                    <!--image-->
+                    {% set list1 = d[6].split(',') %}
+                    <!-- <p>{{list1}}</p> -->
+                    <!-- <img src="{{list1[0].replace('[', '').replace('\'','')}}"> -->
+                    <img class="product-img" src="http://images.amazon.com/images/P/{{d[0]}}.01._SCTZZZZZZZ_.jpg">
+                    <!-- <img src="https://images-na.ssl-images-amazon.com/images/I/61YCLJ6BNML.jpg"> -->
+                </div>
+
+                <div class="col-sm-6 data-box">
+                    <div class="review-box">
+                        <p class="review-text"><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> <!-- review 1-->
+                        <p class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p> <!-- review 2-->
+                    </div>
+
+                    <div class="link-box">
+
+                        <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">Click here for the Amazon link</a>
+                    </div>
+                </div>
+            </div>
 
 
 
-        {% endfor %}
-        {% endif %}
+
+            {% endfor %}
+            {% endif %}
     </form>
 
 

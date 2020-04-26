@@ -1,6 +1,7 @@
 body {
-  background-image: linear-gradient(to bottom, rgb(252, 247, 221), white);
-
+  /* background-image: linear-gradient(to bottom, #db849e, rgb(252, 238, 162), rgb(252, 247, 221)); */
+  background-image: linear-gradient(to bottom,  rgb(252, 247, 221),white);
+/* OG: rgb(252, 247, 221) to white */
 }
   
   .step-links a{
@@ -11,6 +12,7 @@ body {
    /* ==================== header stuff ==================*/
   .header {
     color: rgb(102, 102, 102);
+    /* color: white; */
     font-weight: bold;
     font-size: 75px;
     font-family: 'Raleway', sans-serif;
@@ -51,8 +53,10 @@ body {
   .default-mode{
     color:white;
     background-color: rgb(236, 144, 128);
+    /* background-color: rgb(236, 144, 128); */
   }
     /* OG: #FF836C */
+    /* rgb(236, 144, 128) */
 
 /* Ripple effect */
   .ripple {
@@ -60,25 +64,25 @@ body {
     transition: background 0.3s;
   }
   .ripple:hover {
-    background: rgb(236, 61, 34) radial-gradient(circle, transparent 50%, rgb(236, 61, 34) 1%) center/300%;
+    background: rgba(236, 61, 34, 0.8) radial-gradient(circle, transparent 50%, rgb(236, 61, 34) 1%) center/300%;
   }
   .ripple:active {
-    background-color: rgb(207, 47, 23);
+    background-color: rgba(207, 47, 23, 0.8);
     background-size: 100%;
     transition: background .2s;
   }
   
   .default-mode:hover{
     color:white;
-    background-color: rgb(236, 61, 34);
+    background-color: rgba(236, 61, 34, 0.8);
   }
   
   .default-mode:active{
-    background-color: rgb(236, 61, 34);
+    background-color: rgba(236, 61, 34, 0.8);
   }
 
   .button-clicked {
-    background-color:  rgb(236, 61, 34);
+    background-color:  rgba(236, 61, 34, 0.8);
   } 
 
  .submit-btn {
@@ -109,7 +113,52 @@ body {
 
  /* ==================== results ==================*/
 
+ .result-box {
+   background-color: rgba(202, 202, 202, 0.7);
+   margin: 2%;
+   padding: 3%;
+   border-radius: 30px;
+ }
 
 .make-bold {
   font-weight: bold;
+}
+
+.info-box {
+}
+
+.review-box {
+  background-color: rgba(255,255,255,0.8);
+  border-radius: 15px;
+  padding: 4%;
+  text-align: left;
+  margin-bottom: 2%;
+}
+
+.link-box {
+
+}
+
+.data-box {
+
+}
+
+.product-img {
+  width: 200px;
+}
+
+.product-title {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.product-price {
+  display: block;
+  font-size: 120%;
+  margin-bottom: 4%;
+  color: rgb(80, 80, 80);
+}
+
+.review-text {
+  margin-bottom: 4%;
 }
