@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <link rel="shortcut icon" href="">
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <!-- <link rel="stylesheet" href="/static/Skeleton-2.0.4/css/skeleton.css"> -->
     <link rel="stylesheet" href="../static/main.css">
@@ -16,7 +17,7 @@
         <p class="name">Project Name: {{ name }}</p>
         <p>Student Names: {{ netid }}</p>
     </div> -->
-    <form class="form-inline global-search">
+    <form class="form-inline global-search" id="question">
         <h1 class=" header">
             gifter.ai🎁
         </h1>
@@ -88,8 +89,11 @@
         <br>
         <br>
 
-        <div id="giftGif" style="display:none"><img src="presentopen.gif">
+
+        <div id="presentOpenGif" style="display:none"><img
+                src="https://i.pinimg.com/originals/fd/2c/1a/fd2c1a96b654e220d09525f006482477.gif" alt="present">
         </div>
+        <br>
 
         <div class="form-group">
             <input id="input" type="text" name="search" class="form-control"
@@ -126,15 +130,33 @@
 
 
         $("button[type=submit]").click(function () {
-            document.getElementById('giftGif').style.display = "block";
+            document.getElementById('presentOpenGif').style.display = "block";
             setTimeout(function () {
-                document.getElementById('giftGif').style.display = "none";
-            }, 5000);
-            $(document).ready(function () {
-                var elmnt = document.getElementById("results-begin");
-                elmnt.scrollIntoView();
-            });
+                document.getElementById('presentOpenGif').style.display = "none";
+            }, 2000);
+            // $(document).ready(function () {
+            //     var elmnt = document.getElementById("results-begin");
+            //     elmnt.scrollIntoView();
+            // });
+            // $(document).ready(function () {
+            //     // Handler for .ready() called.
+            //     $('html, body').animate({
+            //         scrollTop: $('#results-begin').offset().top
+            //     }, 'slow');
+            // });
 
+        });
+
+        $("#question").submit(function (e) {
+            e.preventDefault();
+            setTimeout(function () {
+                $(document).ready(function () {
+                    // Handler for .ready() called.
+                    $('html, body').animate({
+                        scrollTop: $('#results-begin').offset().top
+                    }, 'slow');
+                })
+            }, 2000);
         });
 
         jQuery("button[type=button]").click(function () {
