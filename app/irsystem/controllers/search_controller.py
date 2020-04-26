@@ -35,9 +35,17 @@ NUM_RESULTS = 10
 GIFT_WORDS = tokenize_query("gift present")
 BIRTHDAY_WORDS = tokenize_query("birthday")
 ROMANCE_WORDS = tokenize_query(
-    "anniversary wedding marriage newlywed registry romantic romance valentines date relationship")
+    "wedding newlywed registry")
 HOLIDAYS_WORDS = tokenize_query(
     "holidays christmas chanukah hanukkah, holidays, merry xmas, santa kwanzaa noel")
+
+ELDERLY_WORDS = tokenize_query("grandparents grandmother grandfather")
+ADULT_WORDS = tokenize_query(
+    "mother father parents sister brother cousin aunt uncle")
+CHILDREN_WORDS = tokenize_query(
+    'child children kid son daughter grandchild granddaughter grandson nephew niece college school teen preteen')
+BABIES_WORDS = tokenize_query("infant baby toddler")
+
 
 # Load inverted indices
 cur_path = pathlib.Path(__file__).parent.absolute(
@@ -68,29 +76,79 @@ reviews_df = pd.read_csv(path2)
 def search():
     query = request.args.get('search')
     price = request.args.get('price')
-    # ocasion = request.get('')
+    print(type(request.args.get('occasion')))
+    print(str(request.args.get('occasion')))
+    occasion = request.args.get('occasion')
+    age = None
+    occasion = None
+    if (request.args.get('fake-occasion') != None):
+        occasion = request.args.get('fake-occasion')
+    if (request.args.get('fake-age') != None):
+        age = request.args.get('fake-age')
+
+    if(occasion == 'birthday'):
+        occasion_list = BIRTHDAY_WORDS
+    elif(occasion == 'wedding'):
+        occasion_list = ROMANCE_WORDS
+    elif(occasion == 'holidays'):
+        occasion_list = HOLIDAYS_WORDS
+    else:
+        occasion_list = []
+
+    age_list = []
+    if(age == 'babies'):
+        age_list = BABIES_WORDS
+    elif(age == 'children'):
+        age = CHILDREN_WORDS
+    elif(age == 'adults'):
+        age_list = ADULT_WORDS
+    elif(age == 'elderly'):
+        age_list = ELDERLY_WORDS
+    else:
+        age_list = []
+
     if not price:
         price = 50
     if not query:
         query = "gift present"
-    output_message = "Based on your inputs, here are some gift ideas!"
-    asin_list = boolean_search(query)
-    data = create_product_list(asin_list, float(price))
-    # productid, title, review_summary1, review_summary2, review1, review2, image, price
-    return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
+
+    if occasion != None:
+        output_message = "Based on your inputs, here are some gift ideas!"
+        asin_list, review_score_dict = boolean_search(
+            query, occasion_list, age_list)
+        data = create_product_list(asin_list, float(price), review_score_dict)
+        # productid, title, review_summary1, review_summary2, review1, review2, image, price
+        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
+    else:
+        return render_template('search.html', name=project_name, netid=net_id, output_message="", data=[], asins=[])
 
 
-def create_product_list(asin_list, price):
+def create_product_list(asin_list, price, review_score_dict):
     product_list = []
     for asin in asin_list:
         row = metadata_df.loc[metadata_df.asin == asin]
         reviews = reviews_df.loc[reviews_df.asin == asin]
         if(not row.empty):
             title = str(row['title'].iloc[0])
-            review1 = str(reviews['reviewText'].iloc[0])
-            review2 = str(reviews['reviewText'].iloc[1])
-            summary1 = str(reviews['summary'].iloc[0])
-            summary2 = str(reviews['summary'].iloc[1])
+
+            if asin in review_score_dict:
+                review_scores = review_score_dict[asin]
+                review_score_sorted = {k: v for k, v in sorted(
+                    review_scores.items(), key=lambda item: item[1], reverse=True)}
+                reviewerIDs = list(review_score_sorted.keys())[:2]
+                review1 = str(
+                    reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['reviewText'])
+                review2 = str(
+                    reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['reviewText'])
+                summary1 = str(
+                    reviews.loc[reviews['reviewerID'] == reviewerIDs[0]].iloc[0]['summary'])
+                summary2 = str(
+                    reviews.loc[reviews['reviewerID'] == reviewerIDs[1]].iloc[0]['summary'])
+            else:
+                review1 = str(reviews['reviewText'].iloc[0])
+                review2 = str(reviews['reviewText'].iloc[1])
+                summary1 = str(reviews['summary'].iloc[0])
+                summary2 = str(reviews['summary'].iloc[1])
             image = str(row['image'].iloc[0])
             out_price = '$' + str(row['price'].iloc[0])
 
@@ -121,7 +179,26 @@ def add_product_score(asin, score, product_score, review_score, title_score):
         title_score[asin] = 0
 
 
-def boolean_search(query):
+def multiply_scores(token_list, product_score, review_score, title_score, weight):
+    # Multiply the scores if the gift words appear in the title/review
+    for token in token_list:
+        visited = set()
+        if token in review_index:
+            for (reviewerID, asin, _) in review_index[token]:
+                if asin in review_score.keys():
+                    if reviewerID in review_score[asin]:
+                        review_score[asin][reviewerID] *= weight
+                    if not asin in visited:
+                        product_score[asin] *= weight
+                        visited.add(asin)
+        if token in title_index:
+            title_asins = list(set(title_index[token]))
+            for asin in title_asins:
+                if asin in title_score.keys() and not asin in visited:
+                    product_score[asin] *= weight
+
+
+def boolean_search(query, occasion_list, age_list):
     # to find the most relevant product
     product_score = {}
     # to find the most relevant reviews for a product
@@ -159,22 +236,12 @@ def boolean_search(query):
         else:
             product_score[asin] = total_review_score
 
-    # Multiply the scores if the gift words appear in the title/review
-    for birthday_word in BIRTHDAY_WORDS:
-        visited = set()
-        for (reviewerID, asin, count) in review_index[birthday_word]:
-            if asin in review_score.keys():
-                if reviewerID in review_score[asin]:
-                    review_score[asin][reviewerID] *= OCCASION_WEIGHT
-                if not asin in visited:
-                    product_score[asin] *= OCCASION_WEIGHT
-                    visited.add(asin)
-        title_asins = list(set(title_index[birthday_word]))
-        for asin in title_asins:
-            if asin in title_score.keys() and not asin in visited:
-                product_score[asin] *= OCCASION_WEIGHT
+    multiply_scores(occasion_list, product_score,
+                    review_score, title_score, OCCASION_WEIGHT)
+    multiply_scores(age_list, product_score,
+                    review_score, title_score, AGE_WEIGHT)
 
     product_score_sorted = {k: v for k, v in sorted(
         product_score.items(), key=lambda item: item[1], reverse=True)}
 
-    return list(product_score_sorted.keys())[: NUM_RESULTS]
+    return list(product_score_sorted.keys())[: NUM_RESULTS], review_score

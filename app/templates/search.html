@@ -34,13 +34,13 @@
         <br>
 
         <div class="occasion">
-            <button type="button" name="occasion" value="birthday" class="ripple opt-btn default-mode">birthday <span
-                    class="emoji">🎈</span> </button>
-            <button type="button" name="occasion" value="wedding" class="ripple opt-btn default-mode"> wedding <span
-                    class="emoji">👰</span> </button>
-            <button type="button" name="occasion" value="holidays" class="ripple opt-btn default-mode"> holidays <span
-                    class="emoji">❄️</span></button>
-            <button type="button" name="occasion" value="other" class="ripple opt-btn default-mode"> ¯\_(ツ)_/¯
+            <button type="button" name="occasion" value="birthday" class="occasion ripple opt-btn default-mode">birthday
+                <span class="emoji">🎈</span> </button>
+            <button type="button" name="occasion" value="wedding" class="occasion ripple opt-btn default-mode"> wedding
+                <span class="emoji">👰</span> </button>
+            <button type="button" name="occasion" value="holidays" class="occasion ripple opt-btn default-mode">
+                holidays <span class="emoji">❄️</span></button>
+            <button type="button" name="occasion" value="other" class="occasion ripple opt-btn default-mode"> ¯\_(ツ)_/¯
                 <span class="emoji">🤷</span></button>
         </div>
         </br>
@@ -52,13 +52,13 @@
 
         <div class="age">
             <br />
-            <button type="button" name="age" value="babies" class="ripple opt-btn default-mode"> babies <span
+            <button type="button" name="age" value="babies" class="ripple opt-btn default-mode age"> babies <span
                     class="emoji">👶</span></button>
-            <button type="button" name="age" value="children" class="ripple opt-btn default-mode"> children <span
-                    class="emoji">🧒</span></button>
-            <button type="button" name="age" value="adults" class="ripple opt-btn default-mode"> adults <span
+            <button type="button" name="age" value="children" class="ripple opt-btn default-mode age"> children
+                <span class="emoji">🧒</span></button>
+            <button type="button" name="age" value="adults" class="ripple opt-btn default-mode age"> adults <span
                     class="emoji">🙍</span></button>
-            <button type="button" name="age" value="elderly" class="ripple opt-btn default-mode"> elderly <span
+            <button type="button" name="age" value="elders" class="ripple opt-btn default-mode age"> elderly <span
                     class="emoji">🧓</span></button>
         </div>
         </br>
@@ -94,6 +94,14 @@
             <input id="input" type="text" name="search" class="form-control"
                 placeholder="i.e. camping, music or leave it blank">
         </div>
+        <span id="fake-age-span">
+            <input id="fake-age" type="text" name="fake-age" class="form-control">
+        </span>
+        <span id="fake-occasion-span">
+            <input id="fake-occasion" type="text" name="fake-occasion" class="form-control">
+        </span>
+
+
         <br>
         <br>
         <button type="submit" class="submit-btn ripple default-mode"> surprise me! <span
@@ -129,7 +137,18 @@
         jQuery("button[type=button]").click(function () {
             jQuery(this).toggleClass('active');
             jQuery(this).toggleClass('button-clicked');
+
+            var fired_button = $(this).val();
+            if (this.className.includes("age")) {
+                document.getElementById("fake-age").value = fired_button;
+                document.getElementById("fake-age").innerHTML = this.value;
+            }
+            else if (this.className.includes("occasion")) {
+                document.getElementById("fake-occasion").value = fired_button;
+                document.getElementById("fake-occasion").innerHTML = this.value;
+            }
         });
+
 
         $("#slider").slider({
             min: 0,

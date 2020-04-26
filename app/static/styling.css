@@ -113,3 +113,7 @@ body {
 .make-bold {
   font-weight: bold;
 }
+
+#fake-age-span, #fake-occasion-span{
+  display: none
+}
