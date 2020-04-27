@@ -28,8 +28,8 @@ def tokenize_query(text):
 
 
 OCCASION_WEIGHT = 1.2
-AGE_WEIGHT = 1.2
-TITLE_WEIGHT = 5
+AGE_WEIGHT = 1.8
+TITLE_WEIGHT = 20
 REVIEW_WEIGHT = 1
 NUM_RESULTS = 10
 GIFT_WORDS = tokenize_query("gift present")
@@ -39,9 +39,10 @@ ROMANCE_WORDS = tokenize_query(
 HOLIDAYS_WORDS = tokenize_query(
     "holidays christmas chanukah hanukkah, holidays, merry xmas, santa kwanzaa noel")
 
-ELDERLY_WORDS = tokenize_query("grandparents grandmother grandfather")
+ELDERLY_WORDS = tokenize_query(
+    "grandparents grandmother grandfather grandma grandpa granny")
 ADULT_WORDS = tokenize_query(
-    "mother father parents sister brother cousin aunt uncle")
+    "mother father parents sister brother cousin aunt uncle husband wife")
 CHILDREN_WORDS = tokenize_query(
     'child children kid son daughter grandchild granddaughter grandson nephew niece college school teen preteen')
 BABIES_WORDS = tokenize_query("infant baby toddler")
