@@ -17,7 +17,7 @@
         <p class="name">Project Name: {{ name }}</p>
         <p>Student Names: {{ netid }}</p>
     </div> -->
-    <form class="form-inline global-search" id="question">
+    <form class="form-inline global-search" id="question" name="questionform">
         <h1 class=" header">
             gifter.ai🎁
         </h1>
@@ -70,20 +70,19 @@
         <br>
         <div>
             <br />
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" name="price">
+            <input type="range" min="0" max="100" step="5" value="50" class="slider" id="myRange" name="price">
 
             <p>$<span id="demo"></span></p>
         </div>
         <br>
         <br>
-        <input type="text" class="sliderValue" data-index="0" value="10" />
-        <input type="text" class="sliderValue" data-index="1" value="90" />
-        <br>
-        <br>
-        <div id="slider"></div>
+        <!-- <input type="text" class="sliderValue" data-index="0" value="10" /> -->
+        <!-- <input type="text" class="sliderValue" data-index="1" value="90" /> -->
 
-        <br />
-        <br />
+        <!-- <div id="slider"></div> -->
+
+
+
         <br>
         <h5 class="question">the person I'm gifting enjoys...</h5>
         <br>
@@ -221,19 +220,24 @@
                     {% set list1 = d[6].split(',') %}
                     <!-- <p>{{list1}}</p> -->
                     <!-- <img src="{{list1[0].replace('[', '').replace('\'','')}}"> -->
+
                     <img class="product-img" src="http://images.amazon.com/images/P/{{d[0]}}.01._SCTZZZZZZZ_.jpg">
+
+
                     <!-- <img src="https://images-na.ssl-images-amazon.com/images/I/61YCLJ6BNML.jpg"> -->
                 </div>
 
+
+
                 <div class="col-sm-6 data-box">
-                    <div class="review-box">
+                    <div class="review-box over-scroll">
                         <p class="review-text"><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> <!-- review 1-->
                         <p class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p> <!-- review 2-->
                     </div>
 
                     <div class="link-box">
 
-                        <a href="http://www.amazon.com/dp/{{asins[loop.index - 1]}}">Click here for the Amazon link</a>
+                        <a href="http://www.amazon.com/dp/{{d[0]}}">Click here for the Amazon link</a>
                     </div>
                 </div>
             </div>
@@ -244,6 +248,20 @@
             {% endfor %}
             {% endif %}
     </form>
+
+    <!-- <script> -->
+    <!-- // var images = $(".is-img");
+        // console.log(images);
+        // console.log(typeof (images));
+        // for (i of images) {
+        //     console.log(i);
+        //     if ($(".is-img").height <= 20) {
+        //         $(i).src = "https://i.imgur.com/ztaaAQB.png";
+        //     }
+        //     $(i).addClass('product-img');
+        // }
+
+    // </script> -->
 
 
 

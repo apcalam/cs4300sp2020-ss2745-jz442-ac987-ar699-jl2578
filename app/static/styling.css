@@ -143,6 +143,7 @@ body {
   padding: 4%;
   text-align: left;
   margin-bottom: 2%;
+  height: 400px;
 }
 
 .product-img {
@@ -165,3 +166,6 @@ body {
   margin-bottom: 4%;
 }
 
+.over-scroll {
+  overflow: scroll;
+}
