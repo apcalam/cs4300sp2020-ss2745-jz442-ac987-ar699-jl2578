@@ -100,7 +100,7 @@ def search():
     if(age == 'babies'):
         age_list = BABIES_WORDS
     elif(age == 'children'):
-        age = CHILDREN_WORDS
+        age_list = CHILDREN_WORDS
     elif(age == 'adults'):
         age_list = ADULT_WORDS
     elif(age == 'elderly'):
@@ -114,12 +114,13 @@ def search():
         query = "gift present"
 
     if occasion != None:
-        output_message = "Based on your inputs, here are some gift ideas!"
+        top_output_message = "Looking for a " + str(occasion) + " gift " + " within $" + str(price) + " dollars for " + age + " who like " + str(query) + "?"
+        output_message = "Here are some gift ideas for you!"
         asin_list, review_score_dict = boolean_search(
             query, occasion_list, age_list)
         data = create_product_list(asin_list, float(price), review_score_dict)
         # productid, title, review_summary1, review_summary2, review1, review2, image, price
-        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, asins=asin_list)
+        return render_template('search.html', name=project_name, netid=net_id, top_output_message = top_output_message, output_message=output_message, data=data, asins=asin_list)
     else:
         return render_template('search.html', name=project_name, netid=net_id, output_message="", data=[], asins=[])
 

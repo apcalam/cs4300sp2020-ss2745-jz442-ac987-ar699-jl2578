@@ -16,18 +16,20 @@ body {
     font-weight: bold;
     font-size: 75px;
     font-family: 'Raleway', sans-serif;
-
+    font-weight: 500;
   }
 
   .subtitle {
     color: rgb(105, 105, 105);
     font-size: 125%;
+    font-family: 'Raleway', sans-serif;
   }
 
   /* ==================== question stuff ==================*/
   .question {
     text-align: right;
     font-size: 160%;
+    font-family: 'Raleway';
   }
 
     /* ==================== gif stuff ==================*/
@@ -44,6 +46,7 @@ body {
     border: none;
     margin: 2%;
     width: 15%;
+    font-family: 'Raleway', sans-serif;
   }
 
 
@@ -97,11 +100,11 @@ body {
  }
   
   .occasion-div {
-    width: 50%;
+    width: 51%;
   }
 
   .age-div {
-    width: 50%;
+    width: 51%;
   }
 
  /* ==================== slider stuff ==================*/
@@ -115,15 +118,27 @@ body {
    text-align: center;
    margin: 0 auto;
    width: 500px;
- }
+  }
+
+  #demo {
+    font-family: 'Raleway', sans-serif;
+    margin-top: 8px;
+
+  }
 
  /* ==================== results ==================*/
 
  .result-box {
-   background-color: rgba(202, 202, 202, 0.7);
+   /* background-color: rgba(202, 202, 202, 0.7); */
+   background-color: rgb(236, 144, 128);
    margin: 2%;
    padding: 3%;
    border-radius: 30px;
+ }
+
+ #results-begin {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
  }
 
 .make-bold {
@@ -134,11 +149,9 @@ body {
   display: none
 }
 
-.info-box {
-}
-
 .review-box {
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.5);
+  /* background-color: rgba(236, 144, 128, 0.6); */
   border-radius: 15px;
   padding: 4%;
   text-align: left;
@@ -152,20 +165,36 @@ body {
 
 .product-title {
   font-weight: bold;
-  font-size: 120%;
+  font-size: 125%;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
 }
 
 .product-price {
   display: block;
-  font-size: 120%;
+  font-size: 110%;
   margin-bottom: 4%;
-  color: rgb(80, 80, 80);
+  color: rgb(54, 52, 52);
+  font-family: 'Raleway', sans-serif;
 }
 
 .review-text {
   margin-bottom: 4%;
+  font-family: 'Raleway', sans-serif;
 }
 
 .over-scroll {
   overflow: scroll;
 }
+
+.link {
+font-family: 'Raleway', sans-serif;
+color: rgb(54, 52, 52);
+}
+
+.relevant-reviews {
+  font-size: 20px;
+  font-family: 'Raleway', sans-serif;
+  color: black;
+}
+

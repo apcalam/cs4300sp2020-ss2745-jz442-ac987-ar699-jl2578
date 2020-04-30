@@ -9,7 +9,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -197,11 +198,17 @@
 
     <br>
     <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
 
 
     <form class="form-inline global-search">
         {% if data %}
+        {% if top_output_message %}
+        <h1 id="results-begin">{{top_output_message}}</h1> {% endif %}
         <h1 id="results-begin">{{output_message}}</h1>
         <br>
         <br>
@@ -231,13 +238,21 @@
 
                 <div class="col-sm-6 data-box">
                     <div class="review-box over-scroll">
-                        <p class="review-text"><span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p> <!-- review 1-->
-                        <p class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p> <!-- review 2-->
+                        <p class="relevant-reviews"> Top Relevant Reviews: </p>
+                        <br><br>
+                        <p class="review-text"> <span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p>
+                        <!-- review 1-->
+                        <p class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p>
+                        <!-- review 2-->
                     </div>
 
                     <div class="link-box">
+                        <br>
 
-                        <a href="http://www.amazon.com/dp/{{d[0]}}">Click here for the Amazon link</a>
+                        <a href="http://www.amazon.com/dp/{{d[0]}}" class="link" target="_blank">Click here to see
+                            this
+                            product on
+                            Amazon!</a>
                     </div>
                 </div>
             </div>
