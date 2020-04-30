@@ -32,6 +32,9 @@ body {
     font-family: 'Raleway';
   }
 
+  input::placeholder {
+font-family: 'Raleway';  }
+
     /* ==================== gif stuff ==================*/
     img.animated-gif {
       width: 300px;
@@ -157,6 +160,7 @@ body {
   text-align: left;
   margin-bottom: 2%;
   height: 400px;
+  width: 450px;
 }
 
 .product-img {
@@ -181,6 +185,7 @@ body {
 .review-text {
   margin-bottom: 4%;
   font-family: 'Raleway', sans-serif;
+  display: block;
 }
 
 .over-scroll {
