@@ -86,13 +86,13 @@ reviews_df = pd.read_csv(path2)
 def search():
     query = request.args.get('search')
     price = request.args.get('price')
-    occasion = request.args.get('fake-occasion')
-    age = request.args.get('fake-age')
+    occasion = request.args.get('occasion-input')
+    age = request.args.get('age-input')
     occasion = None
-    if (request.args.get('fake-occasion') != None):
-        occasion = request.args.get('fake-occasion')
-    if (request.args.get('fake-age') != None):
-        age = request.args.get('fake-age')
+    if (request.args.get('occasion-input') != None):
+        occasion = request.args.get('occasion-input')
+    if (request.args.get('age-input') != None):
+        age = request.args.get('age-input')
     print(age)
 
     if(occasion == 'birthday'):

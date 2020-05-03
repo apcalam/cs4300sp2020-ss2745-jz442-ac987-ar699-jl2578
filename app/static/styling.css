@@ -160,7 +160,7 @@ font-family: 'Raleway';  }
   padding: 4%;
   text-align: left;
   margin-bottom: 2%;
-  height: 400px;
+  max-height: 400px;
   width: 450px;
 }
 
