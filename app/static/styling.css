@@ -137,6 +137,7 @@ font-family: 'Raleway';  }
    margin: 2%;
    padding: 3%;
    border-radius: 30px;
+
  }
 
  #results-begin {
@@ -164,7 +165,8 @@ font-family: 'Raleway';  }
 }
 
 .product-img {
-  width: 200px;
+  max-width: 400px;
+  height: 250px;
 }
 
 .product-title {
@@ -194,12 +196,24 @@ font-family: 'Raleway';  }
 
 .link {
 font-family: 'Raleway', sans-serif;
-color: rgb(54, 52, 52);
+/* color: rgb(54, 52, 52); */
+color: white;
+font-weight: bold;
+}
+
+.link:hover {
+  color: white;
 }
 
 .relevant-reviews {
   font-size: 20px;
   font-family: 'Raleway', sans-serif;
   color: black;
+}
+
+i {
+  color: #189782;
+  font-size: 18px;
+  font-style:normal;
 }
 

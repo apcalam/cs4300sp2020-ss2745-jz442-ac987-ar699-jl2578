@@ -15,6 +15,7 @@ import pandas as pd
 import random
 nltk.download('stopwords')
 nltk.download('punkt')
+from jinja2 import Markup
 
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
@@ -48,7 +49,7 @@ HOLIDAYS_WORDS = tokenize_query(
     "holidays christmas chanukah hanukkah holidays xmas santa kwanzaa noel")
 
 ELDERLY_WORDS = tokenize_query(
-    "grandparents grandmother grandfather grandma grandpa granny elderly elder")
+    "grandparents grandmother grandfather grandma grandpa granny elderly elder grandmothers grandfathers grandparent")
 ADULT_WORDS = tokenize_query(
     "mother father parents sister brother cousin aunt uncle husband wife men women adult mom dad")
 CHILDREN_WORDS = tokenize_query(
@@ -85,15 +86,14 @@ reviews_df = pd.read_csv(path2)
 def search():
     query = request.args.get('search')
     price = request.args.get('price')
-    print(type(request.args.get('occasion')))
-    print(str(request.args.get('occasion')))
-    occasion = request.args.get('occasion')
-    age = None
+    occasion = request.args.get('fake-occasion')
+    age = request.args.get('fake-age')
     occasion = None
     if (request.args.get('fake-occasion') != None):
         occasion = request.args.get('fake-occasion')
     if (request.args.get('fake-age') != None):
         age = request.args.get('fake-age')
+    print(age)
 
     if(occasion == 'birthday'):
         occasion_list = BIRTHDAY_WORDS
@@ -117,7 +117,7 @@ def search():
     elif(age == 'adults'):
         age_list = ADULT_WORDS
         age_exclude = BABIES_WORDS + CHILDREN_WORDS + ELDERLY_WORDS
-    elif(age == 'elderly'):
+    elif(age == 'elders'):
         age_list = ELDERLY_WORDS
         age_exclude = BABIES_WORDS + CHILDREN_WORDS
     else:
@@ -195,7 +195,7 @@ def create_product_list(asin_list, price, review_score_dict, query, age_list, oc
 
             if (float(row['price'].iloc[0]) <= price):
                 product_tuple = (asin, title, summary1,
-                                 summary2, review1, review2, image, out_price)
+                                 summary2, Markup(review1), Markup(review2), image, out_price)
                 product_list.append(product_tuple)
     # list of tuples
     return product_list

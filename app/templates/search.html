@@ -192,8 +192,20 @@
             $("#slider").slider("values", $this.data("index"), $this.val());
         });
 
+        function reload(product_id) {
+            var img = document.getElementById("target" + product_id);
+            h = img.height;
+            w = img.width;
+            if (h <= 1 && w <= 1) {
+                img.src = "https://cdn.dribbble.com/users/873288/screenshots/5396884/giftbox-404.jpg";
+            }
+            $(img).addClass("product-img");
+        };
 
+        function retext(product_id, reviewText) {
+            document.getElementById('reviewtext' + product_id).innerHTML = reviewText;
 
+        };
     </script>
 
     <br>
@@ -225,31 +237,44 @@
 
                     <!--image-->
                     {% set list1 = d[6].split(',') %}
-                    <!-- <p>{{list1}}</p> -->
-                    <!-- <img src="{{list1[0].replace('[', '').replace('\'','')}}"> -->
-
-                    <img class="product-img" src="http://images.amazon.com/images/P/{{d[0]}}.01._SCTZZZZZZZ_.jpg">
 
 
-                    <!-- <img src="https://images-na.ssl-images-amazon.com/images/I/61YCLJ6BNML.jpg"> -->
+                    <img id="target{{d[0]}}" class="pre-image"
+                        src="http://images.amazon.com/images/P/{{d[0]}}.01._SCTZZZZZZZ_.jpg"
+                        onload="reload('{{d[0]}}')">
+
                 </div>
-
 
 
                 <div class="col-sm-6 data-box">
                     <div class="review-box over-scroll">
                         <p class="relevant-reviews"> Top Relevant Reviews: </p>
                         <br><br>
-                        <p class="review-text"> <span class="make-bold"> {{d[2]}}</span> {{d[4]}} </p>
+                        <p id="reviewtext{{d[0]}}" class="review-text"> <span class="make-bold"> {{d[2]}}</span>
+                            {{d[4]}}
+                        </p>
                         <!-- review 1-->
-                        <p class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}} </p>
+                        <p id="reviewtext{{d[0]}}" class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}}
+                        </p>
                         <!-- review 2-->
                     </div>
+
+
+
+                    <!-- document.getElementById('test').innerHTML= temp -->
+                    <!-- 
+                    <div id='test'></div>
+
+                    document.getElementById("mytableid").innerHTML += "<tr>
+                        <td>str</td>
+                    </tr>"; -->
 
                     <div class="link-box">
                         <br>
 
-                        <a href="http://www.amazon.com/dp/{{d[0]}}" class="link" target="_blank">Click here to see
+                        <a href="http://www.amazon.com/dp/{{d[0]}}" class="link" target="_blank">Click here
+                            to
+                            see
                             this
                             product on
                             Amazon!</a>
@@ -259,28 +284,12 @@
 
 
 
-
             {% endfor %}
             {% endif %}
     </form>
 
-    <!-- <script> -->
-    <!-- // var images = $(".is-img");
-        // console.log(images);
-        // console.log(typeof (images));
-        // for (i of images) {
-        //     console.log(i);
-        //     if ($(".is-img").height <= 20) {
-        //         $(i).src = "https://i.imgur.com/ztaaAQB.png";
-        //     }
-        //     $(i).addClass('product-img');
-        // }
-
-    // </script> -->
-
-
-
 
 </body>
+
 
 </html>
