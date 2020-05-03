@@ -12,6 +12,7 @@ from nltk.corpus import stopwords
 from pathlib import Path
 import pathlib
 import pandas as pd
+import random
 nltk.download('stopwords')
 nltk.download('punkt')
 
@@ -19,11 +20,17 @@ project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
 
 
-def tokenize_query(text):
-    s = set(stopwords.words('english'))
+def tokenize_query(text, stem=True, stopwords_bool=True):
+    if stopwords_bool:
+        s = set(stopwords.words('english'))
+    else:
+        s = set()
     ps = PorterStemmer()
     words = re.findall("[a-zA-Z]+", text)
-    filtered = [ps.stem(w).lower() for w in words if not w in s]
+    if stem:
+        filtered = [ps.stem(w).lower() for w in words if not w in s]
+    else:
+        filtered = [w for w in words if not w in s]
     return filtered
 
 
@@ -31,18 +38,19 @@ OCCASION_WEIGHT = 1.2
 AGE_WEIGHT = 1.8
 TITLE_WEIGHT = 20
 REVIEW_WEIGHT = 1
+EXCLUDE_WEIGHT = 0.5
 NUM_RESULTS = 10
 GIFT_WORDS = tokenize_query("gift present")
 BIRTHDAY_WORDS = tokenize_query("birthday")
 ROMANCE_WORDS = tokenize_query(
     "wedding newlywed registry")
 HOLIDAYS_WORDS = tokenize_query(
-    "holidays christmas chanukah hanukkah, holidays, merry xmas, santa kwanzaa noel")
+    "holidays christmas chanukah hanukkah holidays xmas santa kwanzaa noel")
 
 ELDERLY_WORDS = tokenize_query(
-    "grandparents grandmother grandfather grandma grandpa granny")
+    "grandparents grandmother grandfather grandma grandpa granny elderly elder")
 ADULT_WORDS = tokenize_query(
-    "mother father parents sister brother cousin aunt uncle husband wife")
+    "mother father parents sister brother cousin aunt uncle husband wife men women adult mom dad")
 CHILDREN_WORDS = tokenize_query(
     'child children kid son daughter grandchild granddaughter grandson nephew niece college school teen preteen')
 BABIES_WORDS = tokenize_query("infant baby toddler")
@@ -89,24 +97,32 @@ def search():
 
     if(occasion == 'birthday'):
         occasion_list = BIRTHDAY_WORDS
+        occasion_exclude = HOLIDAYS_WORDS
     elif(occasion == 'wedding'):
         occasion_list = ROMANCE_WORDS
+        occasion_exclude = HOLIDAYS_WORDS
     elif(occasion == 'holidays'):
         occasion_list = HOLIDAYS_WORDS
+        occasion_exclude = []
     else:
         occasion_list = []
+        occasion_exclude = []
 
-    age_list = []
     if(age == 'babies'):
         age_list = BABIES_WORDS
+        age_exclude = ADULT_WORDS + ELDERLY_WORDS
     elif(age == 'children'):
         age_list = CHILDREN_WORDS
+        age_exclude = ADULT_WORDS + ELDERLY_WORDS
     elif(age == 'adults'):
         age_list = ADULT_WORDS
+        age_exclude = BABIES_WORDS + CHILDREN_WORDS + ELDERLY_WORDS
     elif(age == 'elderly'):
         age_list = ELDERLY_WORDS
+        age_exclude = BABIES_WORDS + CHILDREN_WORDS
     else:
         age_list = []
+        age_exclude = []
 
     if not price:
         price = 50
@@ -117,16 +133,22 @@ def search():
         top_output_message = "Looking for a " + str(occasion) + " gift " + " within $" + str(
             price) + " dollars for " + age + " who like " + str(query) + "?"
         output_message = "Here are some gift ideas for you!"
+        # if not query:
+        #    asin_list = surprise_gift(
+        #        occasion_list=occasion_list, age_list=age_list)
+        #    review_score_dict = {}
+        # else:
         asin_list, review_score_dict = boolean_search(
-            query, occasion_list, age_list)
-        data = create_product_list(asin_list, float(price), review_score_dict)
+            query, occasion_list, age_list, occasion_exclude, age_exclude)
+        data = create_product_list(asin_list, float(
+            price), review_score_dict, query, age_list, occasion_list)
         # productid, title, review_summary1, review_summary2, review1, review2, image, price
         return render_template('search.html', name=project_name, netid=net_id, top_output_message=top_output_message, output_message=output_message, data=data, asins=asin_list)
     else:
         return render_template('search.html', name=project_name, netid=net_id, top_output_message="", output_message="", data=[], asins=[])
 
 
-def create_product_list(asin_list, price, review_score_dict):
+def create_product_list(asin_list, price, review_score_dict, query, age_list, occasion_list):
     product_list = []
     for asin in asin_list:
         row = metadata_df.loc[metadata_df.asin == asin]
@@ -167,6 +189,9 @@ def create_product_list(asin_list, price, review_score_dict):
                 summary2 = str(reviews['summary'].iloc[1])
             image = str(row['image'].iloc[0])
             out_price = '$' + str(row['price'].iloc[0])
+
+            review1, review2 = highlight(
+                query, age_list, occasion_list, review1, review2)
 
             if (float(row['price'].iloc[0]) <= price):
                 product_tuple = (asin, title, summary1,
@@ -214,7 +239,7 @@ def multiply_scores(token_list, product_score, review_score, title_score, weight
                     product_score[asin] *= weight
 
 
-def boolean_search(query, occasion_list, age_list):
+def boolean_search(query, occasion_list, age_list, occasion_exclude, age_exclude):
     # to find the most relevant product
     product_score = {}
     # to find the most relevant reviews for a product
@@ -256,8 +281,88 @@ def boolean_search(query, occasion_list, age_list):
                     review_score, title_score, OCCASION_WEIGHT)
     multiply_scores(age_list, product_score,
                     review_score, title_score, AGE_WEIGHT)
+    multiply_scores(occasion_exclude + age_exclude, product_score,
+                    review_score, title_score, EXCLUDE_WEIGHT)
 
     product_score_sorted = {k: v for k, v in sorted(
         product_score.items(), key=lambda item: item[1], reverse=True)}
 
     return list(product_score_sorted.keys())[: NUM_RESULTS], review_score
+
+
+def highlight(query, age_list, occasion_list, review1, review2):
+    stemmed_r1 = tokenize_query(review1, True, False)
+    stemmed_r2 = tokenize_query(review2, True, False)
+    tokenized_r1 = tokenize_query(review1, False, False)
+    tokenized_r2 = tokenize_query(review2, False, False)
+
+    review1html = review1
+    review2html = review2
+
+    start = "<b><i>"
+    end = "</i></b>"
+
+    age_words = set(age_list)
+    occasion_words = set(occasion_list)
+    query_words = set(tokenize_query(query))
+    key_words = set.union(age_words, occasion_words, query_words)
+
+    for i, token in enumerate(stemmed_r1):
+        review_word = tokenized_r1[i]
+        if token in key_words:
+            index = review1html.find(review_word)
+            while (index >= 0):
+                left = review1html[: index]
+                right = review1html[index + len(review_word):]
+                review1html = left + start + review_word + end + right
+                index = review1html.find(
+                    review_word, index + len(review_word) + 7)
+
+    for i, token in enumerate(stemmed_r2):
+        review_word = tokenized_r2[i]
+        if token in key_words:
+            index = review2html.find(review_word)
+            while (index >= 0):
+                left = review2html[: index]
+                right = review2html[index + len(review_word):]
+                review2html = left + start + review_word + end + right
+                index = review2html.find(
+                    review_word, index + len(review_word) + 7)
+
+    return review1html, review2html
+
+
+def surprise_gift(occasion_list=[], age_list=[]):
+    result = []
+    if (occasion_list == [] and age_list == []):
+        query = tokenize_query("gift present")
+        products = []
+        for t in query:
+            products += title_index[t]
+            products += [asin for (_, asin, _) in review_index[t]]
+        result = random.sample(products, 10)
+    else:
+        products_occasion = []
+        products_age = []
+        for occasion in occasion_list:
+            if occasion in title_index:
+                products_occasion += title_index[occasion]
+            if occasion in review_index:
+                products_occasion += [asin for (_, asin, _)
+                                      in review_index[occasion]]
+        products_occasion = set(products_occasion)
+
+        for age in age_list:
+            if age in title_index:
+                products_age += title_index[age]
+            if age in review_index:
+                products_age += [asin for (_, asin, _) in review_index[age]]
+        products_age = set(products_age)
+
+        products = products_occasion.intersection(products_age)
+
+        if(len(products) >= 10):
+            result = random.sample(products, 10)
+        else:
+            result = list(products)
+    return result
