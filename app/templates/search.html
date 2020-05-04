@@ -18,6 +18,11 @@
         <p class="name">Project Name: {{ name }}</p>
         <p>Student Names: {{ netid }}</p>
     </div> -->
+    <div class="tab-stuff">
+        <a href="https://gifter-ai-v1.herokuapp.com/" target="_blank">Version 1 |</a>
+        <a href="https://gifter-ai-v2.herokuapp.com/" target="_blank">Version 2</a>
+    </div>
+
     <form class="form-inline global-search" id="question" name="questionform">
         <h1 class=" header">
             gifter.ai🎁
@@ -60,7 +65,7 @@
                 <span class="emoji">🧒</span></button>
             <button type="button" name="age" value="adults" class="ripple opt-btn default-mode age"> adults <span
                     class="emoji">🙍</span></button>
-            <button type="button" name="age" value="elders" class="ripple opt-btn default-mode age"> elderly <span
+            <button type="button" name="age" value="seniors" class="ripple opt-btn default-mode age"> seniors <span
                     class="emoji">🧓</span></button>
         </div>
         </br>
@@ -70,18 +75,27 @@
         <h5 class="question">what is your budget?</h5>
         <br>
         <div>
-            <br />
+            <!-- <br />
             <input type="range" min="0" max="100" step="5" value="50" class="slider" id="myRange" name="price">
 
-            <p>$<span id="demo"></span></p>
+            <p>$<span id="demo"></span></p> -->
         </div>
         <br>
         <br>
         <br />
-        <!-- <input type="text" class="sliderValue" data-index="0" value="10" /> -->
-        <!-- <input type="text" class="sliderValue" data-index="1" value="90" /> -->
+        <!-- two handle slider -->
 
-        <!-- <div id="slider"></div> -->
+
+
+        <div id="slider"></div>
+
+        <p>$</p>
+        <input type="text" class="sliderValue leftslider" data-index="0" value="0" name="min_budget" />
+        <p>$</p>
+        <input type="text" class="sliderValue rightslider" data-index="1" value="100" name="max_budget" />
+        <br>
+        <br>
+
 
 
 
@@ -98,7 +112,7 @@
 
         <div class="form-group">
             <input id="input" type="text" name="search" class="form-control"
-                placeholder="enter a hobby or activity e.g. drawing, camping">
+                placeholder="enter a hobby or activity e.g. drawing, camping or leave it blank!">
         </div>
         <span id="fake-age-span">
             <input id="fake-age" type="text" name="age-input" class="form-control">
@@ -121,13 +135,13 @@
 
 
     <script>
-        var slider = document.getElementById("myRange");
-        var output = document.getElementById("demo");
-        output.innerHTML = slider.value;
+        // var slider = document.getElementById("myRange");
+        // var output = document.getElementById("demo");
+        // output.innerHTML = slider.value;
 
-        slider.oninput = function () {
-            output.innerHTML = this.value;
-        }
+        // slider.oninput = function () {
+        //     output.innerHTML = this.value;
+        // }
 
 
         $("button[type=submit]").click(function () {
@@ -158,29 +172,50 @@
         })
 
         jQuery("button[type=button]").click(function () {
+
+            var fired_button = $(this).val();
+            if (this.className.includes("age")) {
+                if (this.className.includes("active")) {
+                    document.getElementById("fake-age").value = null;
+                    document.getElementById("fake-age").innerHTML = '';
+                }
+                else {
+                    document.getElementById("fake-age").value = fired_button;
+                    document.getElementById("fake-age").innerHTML = this.value;
+                }
+
+            }
+            else if (this.className.includes("occasion")) {
+                if (this.className.includes("active")) {
+                    document.getElementById("fake-occasion").value = null;
+                    document.getElementById("fake-occasion").innerHTML = '';
+                }
+                else {
+                    document.getElementById("fake-occasion").value = fired_button;
+                    document.getElementById("fake-occasion").innerHTML = this.value;
+                }
+
+            }
             jQuery(this).toggleClass('active');
             $(this).siblings().removeClass('active')
             $(this).siblings().removeClass('button-clicked')
             jQuery(this).toggleClass('button-clicked');
 
-            var fired_button = $(this).val();
-            if (this.className.includes("age")) {
-                document.getElementById("fake-age").value = fired_button;
-                document.getElementById("fake-age").innerHTML = this.value;
-            }
-            else if (this.className.includes("occasion")) {
-                document.getElementById("fake-occasion").value = fired_button;
-                document.getElementById("fake-occasion").innerHTML = this.value;
-            }
         });
+
 
 
         $("#slider").slider({
             min: 0,
             max: 100,
-            step: 1,
-            values: [10, 90],
+            step: 5,
+            values: [0, 100],
             slide: function (event, ui) {
+                low = ui.values[0];
+                high = ui.values[1];
+                if (low >= high || high - low < 20) {
+                    return false;
+                }
                 for (var i = 0; i < ui.values.length; ++i) {
                     $("input.sliderValue[data-index=" + i + "]").val(ui.values[i]);
                 }
@@ -191,6 +226,8 @@
             var $this = $(this);
             $("#slider").slider("values", $this.data("index"), $this.val());
         });
+
+
 
         function reload(product_id) {
             var img = document.getElementById("target" + product_id);
@@ -251,10 +288,12 @@
                         <p class="relevant-reviews"> Top Relevant Reviews: </p>
                         <br><br>
                         <p id="reviewtext{{d[0]}}" class="review-text"> <span class="make-bold"> {{d[2]}}</span>
+                            <br>
                             {{d[4]}}
                         </p>
                         <!-- review 1-->
-                        <p id="reviewtext{{d[0]}}" class="review-text"><span class="make-bold"> {{d[3]}}</span> {{d[5]}}
+                        <p id="reviewtext{{d[0]}}" class="review-text"><span class="make-bold"> {{d[3]}}</span>
+                            <br>{{d[5]}}
                         </p>
                         <!-- review 2-->
                     </div>

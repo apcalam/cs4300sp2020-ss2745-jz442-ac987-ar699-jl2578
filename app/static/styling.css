@@ -76,25 +76,26 @@ font-family: 'Raleway';  }
     transition: background 0.3s;
   }
   .ripple:hover {
-    background: rgba(236, 61, 34, 0.8) radial-gradient(circle, transparent 50%, rgb(236, 61, 34) 1%) center/300%;
+    background: rgba(116 , 189, 203, 0.8) radial-gradient(circle, transparent 50%, rgb(116 , 189, 203) 1%) center/300%;
   }
   .ripple:active {
-    background-color: rgba(207, 47, 23, 0.8);
+    /*background-color: rgba(116 , 189, 203, 0.8);*/
+    background-color: rgba(116 , 189, 203, 0.8);
     background-size: 100%;
     transition: background .2s;
   }
   
   .default-mode:hover{
     color:white;
-    background-color: rgba(236, 61, 34, 0.8);
+    background-color: rgba(116 , 189, 203, 0.8);
   }
   
   .default-mode:active{
-    background-color: rgba(236, 61, 34, 0.8);
+    background-color: rgba(116 , 189, 203, 0.8);
   }
 
   .button-clicked {
-    background-color:  rgba(236, 61, 34, 0.8);
+    background-color:  rgba(116 , 189, 203, 0.8);
   } 
 
  .submit-btn {
@@ -123,7 +124,26 @@ font-family: 'Raleway';  }
    text-align: center;
    margin: 0 auto;
    width: 500px;
+   /* background: rgb(236, 144, 128); */
+   background: rgb(245, 245, 245);
   }
+
+.sliderValue {
+    font-family: 'Raleway', sans-serif;
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    width: 40px;
+  }
+
+  .rightslider {
+    margin-left: 0px;
+  }
+
+  .leftslider {
+    margin-right: 100px;
+  }
+  
 
   #demo {
     font-family: 'Raleway', sans-serif;
@@ -149,6 +169,7 @@ font-family: 'Raleway';  }
 
 .make-bold {
   font-weight: bold;
+  display: block;
 }
 
 #fake-age-span, #fake-occasion-span{
@@ -213,7 +234,7 @@ color: white;
 }
 
 i {
-  color: #189782;
+  color: #6197a1;
   font-size: 18px;
   font-style:normal;
 }
@@ -231,4 +252,15 @@ i {
 
  .center-text{
    text-align: center;
+ }
+
+ .tab-stuff {
+   background-color: rgba(116 , 189, 203, 0.8);
+   text-align: right;
+   padding: 5px;
+ }
+
+ .tab-stuff a {
+   color: white;
+   font-family: 'Raleway', sans-serif;
  }

@@ -36,7 +36,7 @@ def tokenize_query(text, stem=True, stopwords_bool=True):
 
 
 OCCASION_WEIGHT = 1.2
-AGE_WEIGHT = 1.8
+AGE_WEIGHT = 2
 TITLE_WEIGHT = 20
 REVIEW_WEIGHT = 1
 EXCLUDE_WEIGHT = 0.5
@@ -53,7 +53,7 @@ ELDERLY_WORDS = tokenize_query(
 ADULT_WORDS = tokenize_query(
     "mother father parents sister brother cousin aunt uncle husband wife men women adult mom dad")
 CHILDREN_WORDS = tokenize_query(
-    'child children kid son daughter grandchild granddaughter grandson nephew niece college school teen preteen')
+    'child children kid son daughter grandchild granddaughter grandson nephew niece college school teen preteen grandkid')
 BABIES_WORDS = tokenize_query("infant baby toddler")
 
 
@@ -85,15 +85,16 @@ reviews_df = pd.read_csv(path2)
 @irsystem.route('/', methods=['GET'])
 def search():
     query = request.args.get('search')
-    price = request.args.get('price')
+    # price = request.args.get('price')
+    min_price = request.args.get('min_budget')
+    max_price = request.args.get('max_budget')
     occasion = request.args.get('occasion-input')
-    age = request.args.get('age-input')
+    age = None
     occasion = None
     if (request.args.get('occasion-input') != None):
         occasion = request.args.get('occasion-input')
     if (request.args.get('age-input') != None):
         age = request.args.get('age-input')
-    print(age)
 
     if(occasion == 'birthday'):
         occasion_list = BIRTHDAY_WORDS
@@ -117,21 +118,41 @@ def search():
     elif(age == 'adults'):
         age_list = ADULT_WORDS
         age_exclude = BABIES_WORDS + CHILDREN_WORDS + ELDERLY_WORDS
-    elif(age == 'elders'):
+    elif(age == 'seniors'):
         age_list = ELDERLY_WORDS
         age_exclude = BABIES_WORDS + CHILDREN_WORDS
     else:
         age_list = []
         age_exclude = []
 
-    if not price:
-        price = 50
     if not query:
         query = "gift present"
 
+    top_output_message = "Looking for a "
+    
+    if(occasion != None):
+        if(occasion == "other"):
+            top_output_message += "gift between $" + str(min_price) + " and $" + str(max_price) 
+        else:
+            top_output_message += occasion + " gift between $" + str(min_price) + " and $" + str(max_price) 
+    else:
+        top_output_message += "gift between $" + str(
+            min_price) + " and $" + str(max_price)  
+
+    if (age != None and age != ""):
+        top_output_message += " for " + age
+    else:
+        top_output_message += " for someone"
+
+    if query != "gift present" and age != None and age != "":
+        top_output_message += " who like " + query + "? "
+    elif query != "gift present" and (age == None or age == ""):
+        top_output_message += " who likes " + query + "? "
+    else:
+        top_output_message += "? "
+        
+        
     if occasion != None:
-        top_output_message = "Looking for a " + str(occasion) + " gift " + " within $" + str(
-            price) + " dollars for " + age + " who like " + str(query) + "?"
         output_message = "Here are some gift ideas for you!"
         # if not query:
         #    asin_list = surprise_gift(
@@ -139,16 +160,15 @@ def search():
         #    review_score_dict = {}
         # else:
         asin_list, review_score_dict = boolean_search(
-            query, occasion_list, age_list, occasion_exclude, age_exclude)
-        data = create_product_list(asin_list, float(
-            price), review_score_dict, query, age_list, occasion_list)
+            query, occasion_list, age_list, occasion_exclude, age_exclude, float(min_price), float(max_price))
+        data = create_product_list(asin_list, review_score_dict, query, age_list, occasion_list)
         # productid, title, review_summary1, review_summary2, review1, review2, image, price
         return render_template('search.html', name=project_name, netid=net_id, top_output_message=top_output_message, output_message=output_message, data=data, asins=asin_list)
     else:
         return render_template('search.html', name=project_name, netid=net_id, top_output_message="", output_message="", data=[], asins=[])
 
 
-def create_product_list(asin_list, price, review_score_dict, query, age_list, occasion_list):
+def create_product_list(asin_list, review_score_dict, query, age_list, occasion_list):
     product_list = []
     for asin in asin_list:
         row = metadata_df.loc[metadata_df.asin == asin]
@@ -193,10 +213,10 @@ def create_product_list(asin_list, price, review_score_dict, query, age_list, oc
             review1, review2 = highlight(
                 query, age_list, occasion_list, review1, review2)
 
-            if (float(row['price'].iloc[0]) <= price):
-                product_tuple = (asin, title, summary1,
-                                 summary2, Markup(review1), Markup(review2), image, out_price)
-                product_list.append(product_tuple)
+            # if (float(row['price'].iloc[0]) <= price):
+            # if(float(row['price'].iloc[0]) <= max_price and float(row['price'].iloc[0]) >= min_price):
+            product_tuple = (asin, title, summary1, summary2, Markup(review1), Markup(review2), image, out_price)
+            product_list.append(product_tuple)
     # list of tuples
     return product_list
 
@@ -239,7 +259,7 @@ def multiply_scores(token_list, product_score, review_score, title_score, weight
                     product_score[asin] *= weight
 
 
-def boolean_search(query, occasion_list, age_list, occasion_exclude, age_exclude):
+def boolean_search(query, occasion_list, age_list, occasion_exclude, age_exclude, min_price, max_price):
     # to find the most relevant product
     product_score = {}
     # to find the most relevant reviews for a product
@@ -287,7 +307,16 @@ def boolean_search(query, occasion_list, age_list, occasion_exclude, age_exclude
     product_score_sorted = {k: v for k, v in sorted(
         product_score.items(), key=lambda item: item[1], reverse=True)}
 
-    return list(product_score_sorted.keys())[: NUM_RESULTS], review_score
+    result = []
+    for asin in product_score_sorted.keys():
+        row = metadata_df.loc[metadata_df.asin == asin]
+        price = float(row['price'].iloc[0])
+        if(not row.empty and price <= max_price and price >= min_price):
+            result.append(asin)
+        if(len(result) >= NUM_RESULTS):
+            break
+
+    return list(result), review_score
 
 
 def highlight(query, age_list, occasion_list, review1, review2):
