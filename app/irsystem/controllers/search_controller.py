@@ -1,3 +1,4 @@
+from jinja2 import Markup
 from nltk.stem import PorterStemmer
 import pickle
 import os.path as path
@@ -15,7 +16,6 @@ import pandas as pd
 import random
 nltk.download('stopwords')
 nltk.download('punkt')
-from jinja2 import Markup
 
 project_name = "Gifter.ai"
 net_id = "Shreya Subramanian: ss2745, Joy Zhang: jz442, Aparna Calambur: ac987, Ashrita Raman: ar699, Jannie Li: jl2578"
@@ -129,15 +129,17 @@ def search():
         query = "gift present"
 
     top_output_message = "Looking for a "
-    
+
     if(occasion != None):
         if(occasion == "other"):
-            top_output_message += "gift between $" + str(min_price) + " and $" + str(max_price) 
+            top_output_message += "gift between $" + \
+                str(min_price) + " and $" + str(max_price)
         else:
-            top_output_message += occasion + " gift between $" + str(min_price) + " and $" + str(max_price) 
+            top_output_message += occasion + " gift between $" + \
+                str(min_price) + " and $" + str(max_price)
     else:
         top_output_message += "gift between $" + str(
-            min_price) + " and $" + str(max_price)  
+            min_price) + " and $" + str(max_price)
 
     if (age != None and age != ""):
         top_output_message += " for " + age
@@ -150,19 +152,16 @@ def search():
         top_output_message += " who likes " + query + "? "
     else:
         top_output_message += "? "
-        
-        
-    if occasion != None:
-        output_message = "Here are some gift ideas for you!"
-        # if not query:
-        #    asin_list = surprise_gift(
-        #        occasion_list=occasion_list, age_list=age_list)
-        #    review_score_dict = {}
-        # else:
+
+    if not (occasion == None):
         asin_list, review_score_dict = boolean_search(
             query, occasion_list, age_list, occasion_exclude, age_exclude, float(min_price), float(max_price))
-        data = create_product_list(asin_list, review_score_dict, query, age_list, occasion_list)
-        # productid, title, review_summary1, review_summary2, review1, review2, image, price
+        data = create_product_list(
+            asin_list, review_score_dict, query, age_list, occasion_list)
+        if(data == []):
+            output_message = "Sorry! No gifts found 😥"
+        else:
+            output_message = "Here are some gift ideas for you!"
         return render_template('search.html', name=project_name, netid=net_id, top_output_message=top_output_message, output_message=output_message, data=data, asins=asin_list)
     else:
         return render_template('search.html', name=project_name, netid=net_id, top_output_message="", output_message="", data=[], asins=[])
@@ -215,7 +214,8 @@ def create_product_list(asin_list, review_score_dict, query, age_list, occasion_
 
             # if (float(row['price'].iloc[0]) <= price):
             # if(float(row['price'].iloc[0]) <= max_price and float(row['price'].iloc[0]) >= min_price):
-            product_tuple = (asin, title, summary1, summary2, Markup(review1), Markup(review2), image, out_price)
+            product_tuple = (asin, title, summary1, summary2, Markup(
+                review1), Markup(review2), image, out_price)
             product_list.append(product_tuple)
     # list of tuples
     return product_list
