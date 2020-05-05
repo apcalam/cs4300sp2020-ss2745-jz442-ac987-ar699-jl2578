@@ -159,7 +159,7 @@ def search():
         data = create_product_list(
             asin_list, review_score_dict, query, age_list, occasion_list)
         if(data == []):
-            output_message = "Sorry! No gifts found 😥"
+            output_message = "No gifts found 😥 Try modifying or expanding your search!"
         else:
             output_message = "Here are some gift ideas for you!"
         return render_template('search.html', name=project_name, netid=net_id, top_output_message=top_output_message, output_message=output_message, data=data, asins=asin_list)

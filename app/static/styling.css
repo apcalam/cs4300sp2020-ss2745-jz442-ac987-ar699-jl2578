@@ -258,6 +258,7 @@ i {
    background-color: rgba(116 , 189, 203, 0.8);
    text-align: right;
    padding: 5px;
+   padding-right: 20px;
  }
 
  .tab-stuff a {
